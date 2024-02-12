@@ -18,7 +18,9 @@ prices = list(map(lambda item: item['price'], items))
 print(f'prices => {prices}')
 
 def add_taxes(item):
-    item['tax'] = item['price'] * .15
+    #Otra forma de solucionar la alteración por referencia de memoria
+    #new_item = item.copy()
+    item['tax'] = item['price'] * .15   #Exactamente en esta línea es donde se cambia los datos por referencia de memoria
     return item['tax']
 
 print('Antes:')

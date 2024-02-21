@@ -1,4 +1,4 @@
-# Blogpost LxNevul
+# Python - Exercises LxNevul
 
 ![]()<img src="https://i.imgur.com/INy97aR.jpg" width="20%">
 
@@ -7,6 +7,15 @@ Este repositorio está destinado a ejecutar temas teóricos y prácticos de Pyth
 [![facebook](https://img.shields.io/badge/Facebook-lxnevul-%233E73B5?style=plastic&logo=facebook&labelColor=%23505E6E)][netsocial_1]
 [![instagram](https://img.shields.io/badge/Instagram-lxnevul-%23F57A16?style=plastic&logo=instagram&labelColor=%23505E6E)][netsocial_2]
 [![platzi](https://img.shields.io/badge/Platzi-lxnevul-%2313D644?style=plastic&logo=platzi&labelColor=%23505E6E)][netsocial_3]
+
+## Game
+
+Para jugar <strong>Piedra-Papel-Tijera</strong>, debes ejecutar las siguientes instrucciones:
+
+```python
+cd game
+py main.py
+```
 
 ## Descripción
 

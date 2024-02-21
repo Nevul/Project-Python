@@ -55,8 +55,8 @@ def checkChoice(user_option, computer_option, user_wins, computer_wins):
     return user_wins, computer_wins
 
 def checkWinner(user_wins, computer_wins):
-    print('\nComputer wins: ', computer_wins)
-    print('User wins: ', user_wins)
+    print('\nComputer --> ', computer_wins)
+    print('User --> ', user_wins)
     
     if computer_wins == 2 or user_wins == 2:
         exit()

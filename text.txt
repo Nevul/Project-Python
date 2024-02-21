@@ -1,7 +1,1 @@
-Es hora de comenzar a escribir código real y funcional en Python. Por el momento será muy sencillo.
-
-Como se muestran algunos conceptos y términos fundamentales, estos fragmentos de código no serán complejos ni difíciles.
-
-Ejecuta el código en la ventana del editor a la derecha. Si todo sale bien, verás la línea de texto en la ventana de consola.
-
-Como alternativa, inicia IDLE, crea un nuevo archivo fuente de Python, coloca este código, nombra el archivo y guárdalo. Ahora ejecútalo. Si todo sale bien, verás el texto contenido entre comillas en la ventana de la consola IDLE. El código que has ejecutado debería parecerte familiar. Viste algo muy similar cuando te guiamos a través de la configuración del entorno IDLE.
+Este es un mensaje de prueba para comprobar que se sobreescribe el contenido de un archivo al usar "w+"

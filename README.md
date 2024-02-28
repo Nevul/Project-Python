@@ -36,9 +36,12 @@ py main.py
 
 ## App Project
 Análisis de datos de población por continente y por país.
+
 ```sh
 git clone [SSH|HTTPS]
 cd App
+sudo apt install -y python3-venv
+python3 -m venv .venv
 .venv\Scripts\activate
 pip3 install -r requirements.txt
 py main.py

@@ -41,10 +41,10 @@ Análisis de datos de población por continente y por país.
 git clone [SSH|HTTPS]
 cd App
 sudo apt install -y python3-venv
-python3 -m venv .venv
-.venv\Scripts\activate
+python3 -m venv .venv || py -m venv .venv
+source .venv/bin/activate || .venv\Scripts\activate
 pip3 install -r requirements.txt
-py main.py
+python3 main.py || py main.py
 ```
 
 ## Red de contacto

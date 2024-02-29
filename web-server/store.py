@@ -2,6 +2,7 @@
 import requests
 
 def get_categories():
+    #requests.get() --> obtenemos la información HTTP de una página web
     r = requests.get('https://api.escuelajs.co/api/v1/categories') #Hacemos solicitudes HTTP con requests
     print(r.status_code)    #muestra un código del estado de conexión al servidor solicitado
     print(type(r.text))   #devuelve el contenido solicitado del servidor en String. Esto no es iterable.
@@ -10,5 +11,6 @@ def get_categories():
     categories = r.json()   #esto convierte a un formato json, entonces python puede interpretar esto como una lista
                             #con diccionarios, permitiendo operar con ella
     
+    print(type(categories))
     for category in categories:
         print(category['name'])

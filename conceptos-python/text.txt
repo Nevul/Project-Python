@@ -1,0 +1,4 @@
+Este es un mensaje de prueba 2 para comprobar que se sobreescribe el contenido de un archivo al usar "w+"
+Este es un párrafo y sirve para que se pueda leer distintas líneas desde el archivo files.py,
+en donde se usa la función file.readline(), que se encarga de leer toda una línea. Si se ingresa un número,
+éste indicará la línea a leer del archivo.

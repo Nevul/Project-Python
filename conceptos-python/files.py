@@ -1,4 +1,4 @@
-file = open('text.txt') #esto abre el archivo y ocupa espacio de memoria hasta que se cierre con name.close()
+file = open('conceptos-python/text.txt') #esto abre el archivo y ocupa espacio de memoria hasta que se cierre con name.close()
 
 #print(file.read())     #lee todo el documento
 print(file.readline())  #readline() sin parámetros leerá toda la línea
@@ -15,6 +15,6 @@ print('-------------------------')
 #Esta es otra forma de abrir un archivo para su manipulación o lectura. A diferencia del método anterior,
 #aquí no debemos preocuparnos por cerrar el archivo con name.close(), el archivo se cierra automáticamente
 #una vez que termina su código interno.
-with open('./text.txt') as file:
+with open('conceptos-python/text.txt') as file:
     for line in file:
         print(line)

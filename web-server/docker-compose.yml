@@ -1,0 +1,11 @@
+# Aquí se definen todos los servicios que se van a implementar. Estos servicios se basan en un archivo Dockerfile
+# o en una imagen de contenedor existente.
+services:
+  web-server-lxn:  # nombre del servicio, puede ser cualquiera
+    build:  # constructor
+      context: .  # indica el contexto, es decir, desde que ubicación lo hará el constructor
+      dockerfile: ./Dockerfile  # indica el archivo dockerfile a buscar para construir el contenedor -> Dockerfile
+    volumes:  #Esto enlace el directorio de archivos al contenedor docker.
+      - .:/App
+    ports:
+      - '80:80'

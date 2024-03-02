@@ -5,3 +5,5 @@ services:
     build:  # constructor
       context: .  # indica el contexto, es decir, desde que ubicación lo hará el constructor
       dockerfile: ./Dockerfile  # indica el archivo dockerfile a buscar para construir el contenedor -> Dockerfile
+    volumes:  #Esto enlace el directorio de archivos al contenedor docker.
+      - .:/App 

@@ -8,9 +8,7 @@ def saludar(name: str | None = None):
 saludar('Alex')
 
 from datetime import datetime
-
 from pydantic import BaseModel
-
 
 class User(BaseModel):
     id: int
@@ -29,3 +27,16 @@ print(user)
 # > User id=123 name='John Doe' signup_ts=datetime.datetime(2017, 6, 1, 12, 22) friends=[1, 2, 3]
 print(user.id)
 # > 123
+from enum import Enum
+from fastapi import FastAPI
+
+class ModelName(str, Enum):
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
+
+app = FastAPI()
+
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    return model_name

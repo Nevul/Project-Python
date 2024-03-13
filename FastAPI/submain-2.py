@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Path, Query #Import Path para validación de parámetros en Path
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional     #Podemos usar Optional o Union, para definir que puede ser de un tipo u otro
@@ -19,7 +19,7 @@ class Movie(BaseModel):
     overview: str = Field(min_length=30, max_length=60)
     year: int = Field(le = 2024)
     rating: float = Field(ge = 0, le = 10)
-    category: str
+    category: str = Field(min_length=5, max_length=12)
 
     model_config = ConfigDict(
         json_schema_extra = {
@@ -84,15 +84,17 @@ def message():
 async def get_movies():
     return movies
 
+#Validación para parámetros en Path
 @app.get('/movies/{id}', tags = ['Movies'])
-async def get_movie(id: int):
+async def get_movie(id: int = Path(ge = 1, le = 1000)):
     for movie in movies:
         if movie['id'] == id:
             return movie
     return 'No se encontró el recurso indicado'
 
+#Restricciones aplicadas a los parámetros query
 @app.get('/movies/', tags = ['Movies'])
-async def get_movie_by_category(category: str, year: int):
+async def get_movie_by_category(category: str = Query(min_length = 5, max_length = 12), year: int = Query(ge = 1500, le = 2024)):
     for movie in movies:
         if movie['category'] == category and movie['year'] == str(year):
             return movie  

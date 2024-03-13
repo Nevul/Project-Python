@@ -51,7 +51,7 @@ async def get_movie(id: int):
             return movie
     return 'No se encontró el recurso indicado'
 
-#Al no definir parámetros en el path, estos se definen como 'parámetros query' si se definen en el Path Operation function
+#Al no definir parámetros en el path, estos se definen como 'parámetros query', y se definen en el Path Operation function
 @app.get('/movies/', tags = ['Movies'])
 async def get_movie_by_category(category: str, year: int):
     for movie in movies:

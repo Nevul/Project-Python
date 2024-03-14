@@ -2,6 +2,7 @@ from fastapi import FastAPI, Body, Path, Query #Import Path para validación de 
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional     #Podemos usar Optional o Union, para definir que puede ser de un tipo u otro
+from http import HTTPStatus
 
 app = FastAPI()
 app.title = 'Project LxNevul'
@@ -105,10 +106,11 @@ async def get_movie_by_category(category: str = Query(min_length = 5, max_length
     return 'No se encontró el recurso indicado'
     '''
 
-@app.post('/movies', tags = ['Movies'], response_model = dict, status_code = 201)
+#status_code alternativamente también puede recibir un IntEnum, en este caso, usamos HTTPStatus del package http
+@app.post('/movies', tags = ['Movies'], response_model = dict, status_code = HTTPStatus.OK)
 async def create_movie(film: Movie) -> dict:
     movies.append(film.model_dump())
-    return JSONResponse(status_code = 201, content = {'message': 'Película añadida al catálogo'})
+    return JSONResponse(status_code = HTTPStatus.OK, content = {'message': 'Película añadida al catálogo'})
 
 @app.put('/movies/{id}', tags = ['Movies'], response_model = dict, status_code = 201)
 async def modify_movie(id: Optional[int], film: Movie) -> dict:

@@ -80,24 +80,24 @@ movies = [
 def message():
     return HTMLResponse('<h2>Bienvenidos, soy LxNevul</h2>')
 
-@app.get('/movies', tags = ['Movies'], response_model = list[Movie])    #response_model indica el tipo de respuesta que espera
+@app.get('/movies', tags = ['Movies'], response_model = list[Movie], status_code = 200)    #response_model indica el tipo de respuesta que espera
 async def get_movies() -> list[Movie]:  #toca indicar en el Path Operation Function la respuesta que se espera también
     #return movies  --> Esto sería sin usar JSONResponse
-    return JSONResponse(content = movies) #Usando el formato JSONResponse para devolver respuestas al cliente
+    return JSONResponse(status_code = 200, content = movies) #Usando el formato JSONResponse para devolver respuestas al cliente
 
 #Validación para parámetros en Path
-@app.get('/movies/{id}', tags = ['Movies'], response_model = Movie)
+@app.get('/movies/{id}', tags = ['Movies'], response_model = Movie, status_code = 200)
 async def get_movie(id: int = Path(ge = 1, le = 1000)) -> Movie:
     for movie in movies:
         if movie['id'] == id:
-            return JSONResponse(content = movie)
-    return JSONResponse(content = {'message': 'No se encontró el recurso indicado'})
+            return JSONResponse(status_code = 200, content = movie)
+    return JSONResponse(status_code = 404, content = {'message': 'No se encontró el recurso indicado'})
 
 #Restricciones aplicadas a los parámetros query
-@app.get('/movies/', tags = ['Movies'], response_model = list[Movie])
+@app.get('/movies/', tags = ['Movies'], response_model = list[Movie], status_code = 200)
 async def get_movie_by_category(category: str = Query(min_length = 5, max_length = 12), year: int = Query(ge = 1500, le = 2024)) -> list[Movie]:
     data = [movie for movie in movies if movie['category'] == category and movie['year'] == year]
-    return JSONResponse(content = data)
+    return JSONResponse(status_code = 200, content = data)
     '''
     for movie in movies:
         if movie['category'] == category and movie['year'] == str(year):
@@ -105,12 +105,12 @@ async def get_movie_by_category(category: str = Query(min_length = 5, max_length
     return 'No se encontró el recurso indicado'
     '''
 
-@app.post('/movies', tags = ['Movies'], response_model = dict)
+@app.post('/movies', tags = ['Movies'], response_model = dict, status_code = 201)
 async def create_movie(film: Movie) -> dict:
     movies.append(film.model_dump())
-    return JSONResponse(content = {'message': 'Película añadida al catálogo'})
+    return JSONResponse(status_code = 201, content = {'message': 'Película añadida al catálogo'})
 
-@app.put('/movies/{id}', tags = ['Movies'], response_model = dict)
+@app.put('/movies/{id}', tags = ['Movies'], response_model = dict, status_code = 201)
 async def modify_movie(id: Optional[int], film: Movie) -> dict:
     for movie in movies:
         if movie['id'] == id:
@@ -119,13 +119,13 @@ async def modify_movie(id: Optional[int], film: Movie) -> dict:
             movie['year'] = film.year
             movie['rating'] = film.rating
             movie['category'] = film.category
-            return JSONResponse(content = {'message': 'Película actualizada'})
-    return JSONResponse(content = {'message': 'No se pudo actualizar los datos'})
+            return JSONResponse(status_code = 201, content = {'message': 'Película actualizada'})
+    return JSONResponse(status_code = 400, content = {'message': 'No se pudo actualizar los datos'})
 
-@app.delete('/movies/{id}', tags = ['Movies'], response_model = dict)
+@app.delete('/movies/{id}', tags = ['Movies'], response_model = dict, status_code = 200)
 async def delete_movie(id: int) -> dict:
     for movie in movies:
         if movie['id'] == id:
             movies.remove(movie)
-            return JSONResponse(content = {'message': 'Película eliminada'})
-    return JSONResponse(content = {'message': 'No se encontró la película indicada'})
+            return JSONResponse(status_code =200, content = {'message': 'Película eliminada'})
+    return JSONResponse(status_code = 404, content = {'message': 'No se encontró la película indicada'})

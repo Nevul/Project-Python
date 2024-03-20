@@ -154,7 +154,7 @@ async def create_item(item: Item):
         item_dict.update({'price_with_tax': price_with_tax})
     return item_dict
 
-@app.put("/items/{item_id}", tags = ['Request Body'])
+@app.put('/items/{item_id}', tags = ['Request Body'])
 async def update_item(item_id: int, item: Item):
     return {"item_id": item_id, **item.model_dump()}  #dict() es obsoleto, se recomienda usar 'model_dump()'
 #Cuando se usa '**', se toma un diccionario y se desempaqueta en una serie de argumentos de palabras clave, donde cada clave del diccionario
@@ -176,12 +176,16 @@ async def update_item(item_id: int, item: Item):
 #... otro diccionario.
 
 #Puedo asignar al mismo tiempo un: Request body + Path + Query Parameters
-#El Reques Body no puede ir al final del Path Operation Function, porque causa confusión en FastAPI a la hora de determinar donde termina
+#El Request Body no puede ir al final del Path Operation Function, porque causa confusión en FastAPI a la hora de determinar donde termina
 #... la definición de la función y donde comienza la definición del Request body.
-@app.put('/items/{item_id}', tags = ['Request Body'])
-async def update_item(item_id: int, item: Item, type: str | None = None):
+@app.put('/itemss/{item_id}', tags = ['Request Body'])
+async def update_item_with_all(item_id: int, item: Item, type: str, q: str):    #Union[str, None] no es usado por FastAPI, pero este permite al editor
+                                                                                #... dar un mejor soporte y detección de errores.
     result = {'item_id': item_id, **item.model_dump()}
     if type:
-        result.update({'q': type})
+        result.update({'type': type, 'q': q})
     return result
+
+#Si coloco el mismo 'Método' en el Path Operation decorator y el mismo 'Path', FastAPI se confunde e interpreta de forma errónea.
+#... no puede haber dos Métodos con el mismo Path
 #-------------Request Body End---------------

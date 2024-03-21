@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Path, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from enum import Enum
+from jwt_manager import create_token
 #----------Conceptos importantes--------------
     #request body -> dato enviado por el cliente hacia tu API
     #response body -> dato enviado por la API hacia el cliente
@@ -42,6 +44,10 @@ app.contact = {
     'url': 'https://github.com/Nevul' 
 }
 
+class User(BaseModel):
+    email: str
+    password: str
+
 #Para Enumerados, se suele usar solo strings o integers, los valores float causan problemas de imprecisión y dan errores.
 class ModelName(str, Enum):
     alex = 'Alex'
@@ -65,6 +71,14 @@ class ModelAge(int, Enum):
 @app.get('/', tags = ['Without Parameters'])
 def message():
     return {'message': 'Hola, soy Alex!'}   #formato json
+
+#Definimos la ruta para hacer login
+#Realizamos la validación de datos del usuario y si cumple, devolvemos la información en un token
+@app.post('/login', tags = ['Auth'])
+async def login(user: User):
+    if user.email == 'admin@gmail.com' and user.password == 'admin':
+        token: str = create_token(user.model_dump())    #para retornar un diccionario, usamos model_dump()
+    return JSONResponse(status_code=200, content=token)# retornamos el token, es decir, la información ya encriptada.
 
 #Podemos declarar variables y parámetros con el mismo formato de strings de Python
 @app.get('/names/{model_name}', tags = ['Path Parameter without Types'])

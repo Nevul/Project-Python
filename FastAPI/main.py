@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Path, Query
+from typing import Optional
+from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from fastapi.security import HTTPBearer
+from pydantic import BaseModel, ConfigDict, Field
 from enum import Enum
-from jwt_manager import create_token
+from jwt_manager import create_token, validate_token
 #----------Conceptos importantes--------------
     #request body -> dato enviado por el cliente hacia tu API
     #response body -> dato enviado por la API hacia el cliente
@@ -44,6 +46,14 @@ app.contact = {
     'url': 'https://github.com/Nevul' 
 }
 
+#Esta función se encarga de solicitar el token al usuario para ser evaluado.
+class JWTBearer(HTTPBearer):    #JWTBearer es una clase hija de HTTPBearer
+    async def __call__(self, request: Request):
+        auth = await super().__call__(request)  #super() permite utilizar métodos del padre
+        data = validate_token(auth.credentials)
+        if data['email'] != 'admin@gmail.com':  #si no coincide la credencial, se lanza un Error
+            raise HTTPException(status_code = 403, detail = 'Credenciales inválidas')
+
 class User(BaseModel):
     email: str
     password: str
@@ -63,6 +73,54 @@ class ModelAge(int, Enum):
     adolescente = 18
     puberto = 12
     infante = 7
+
+class Movie(BaseModel):
+    id: Optional[int] = None    #También puede ser Union[int, None], esto sería lo mismo que Optional[int]
+    title: str = Field(min_length=5, max_length=25)
+    overview: str = Field(min_length=30, max_length=150)
+    year: int = Field(le = 2024)
+    rating: float = Field(ge = 0, le = 10)
+    category: str = Field(min_length=5, max_length=20)
+
+    model_config = ConfigDict(
+        json_schema_extra = {
+            'examples': [
+                {
+                    'id': 1,
+                    'title': 'Nombre de la película',
+                    'overview': 'Descripción breve acerca de la película, en sí un resumen.',
+                    'year': 1995,
+                    'rating': 5.5,
+                    'category': 'Clasificación'
+                }
+            ]
+        }
+    )
+
+movies = [
+    {
+        'id': 0,
+        'title': 'Película o Serie no encontrada',
+        'year': 0,
+        'category': ''
+    },
+    {
+        'id': 1,
+        'title': 'La chica de al lado',
+        'overview': 'Matt es un estudiante que está por graduarse de la preparatoria, mientras tiene como proyecto traer un potencial estudiante de otro país por medio de una beca escolar, pero pronto conocería a Danielle quien alteraría el curso normal de su vida.',
+        'year': 2004,
+        'rating': 6.7,
+        'category': 'Comedy/Romance'
+    },
+    {
+        'id': 2,
+        'title': 'Smallville',
+        'overview': 'Trata sobre la vida adolescente de superman, quien poco a poco va desarrollando sus habilidades y su mente para llegar a portar el traje del superhéroe que todos conocemos.',
+        'year': 2001,
+        'rating': 7.5,
+        'category': 'Drama'
+    }
+]
 
 #@app.get('') Es un Path Operation que especifica una función de devolución de llamada que se invocará cada vez que haya una solicitud
 #HTTP GET en determinada ruta ('/'). Por ejemplo cuando accedamos desde el navegador.
@@ -94,6 +152,12 @@ async def read_age(model_age: ModelAge):
     if model_age == ModelAge.infante:
         return {'model_age': model_age, 'message': 'Eres un infante y deberías estar en la escuela'}
     return {'model_age': model_age}
+
+#dependencies=[Depends(JWTBearer())] -> Indica que se ejecuten ciertas dependencias al hacer peticiones a esta ruta.
+# Depends() permite ejecutar una clase cada vez que se haga una petición a la ruta
+@app.get('/movies', tags = ['Movies'], response_model = list[Movie], status_code = 200, dependencies=[Depends(JWTBearer())])
+async def get_movies() -> list[Movie]:
+    return JSONResponse(status_code = 200, content = movies)
 
 #Usar types, habilita las funciones de sugerencia para autocompletar. Ej: capitalize(). title(), etc.
 #Si se usa parámetros con valor por defecto, no se puede usar variables en el 'path'
@@ -201,5 +265,5 @@ async def update_item_with_all(item_id: int, item: Item, type: str, q: str):    
     return result
 
 #Si coloco el mismo 'Método' en el Path Operation decorator y el mismo 'Path', FastAPI se confunde e interpreta de forma errónea.
-#... no puede haber dos Métodos con el mismo Path
+#... no puede haber dos Métodos del mismo tipo con el mismo Path
 #-------------Request Body End---------------
